@@ -63,9 +63,11 @@ class Phase2LawyerTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($admin)->post("/admin/lawyers/{$profile->id}/approve", [
-            'admin_remark' => 'Bar license verified and confirmed active standing.',
-        ]);
+        $response = $this->actingAs($admin)
+            ->withSession(['admin_secondary_verified' => true])
+            ->post("/admin/lawyers/{$profile->id}/approve", [
+                'admin_remark' => 'Bar license verified and confirmed active standing.',
+            ]);
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('lawyer_profiles', [

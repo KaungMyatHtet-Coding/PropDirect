@@ -70,8 +70,8 @@ export default function OwnerPropertiesCreate() {
         const previews = [];
         files.forEach((file) => {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                previews.push(event.target.result);
+            reader.onload = (ev) => {
+                previews.push(ev.target.result);
                 if (previews.length === files.length) {
                     setImagePreviews([...previews]);
                 }
@@ -105,15 +105,15 @@ export default function OwnerPropertiesCreate() {
                     <div className="flex items-center gap-3">
                         <Link
                             href={route('owner.properties.index')}
-                            className="rounded-xl border border-slate-200 bg-white p-2 text-slate-500 hover:bg-slate-50 transition"
+                            className="rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800 p-2 text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-700 transition"
                         >
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                         <div>
-                            <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                                 Post Direct Property Listing
                             </h2>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-zinc-400">
                                 0% Broker Fee • Verified Landlord Direct to Seeker
                             </p>
                         </div>
@@ -125,22 +125,22 @@ export default function OwnerPropertiesCreate() {
 
             <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
                 {autoConvertedNotice && (
-                    <div className="mb-6 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs text-emerald-800">
+                    <div className="mb-6 flex items-center justify-between rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3 text-xs text-emerald-800 dark:text-emerald-300">
                         <div className="flex items-center gap-2">
-                            <Sparkles className="h-4 w-4 text-emerald-600 shrink-0" />
+                            <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                             <span>Zawgyi text was detected and automatically converted to standard Myanmar Unicode.</span>
                         </div>
                         <button onClick={() => setAutoConvertedNotice(false)}>
-                            <X className="h-4 w-4 text-emerald-600" />
+                            <X className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                         </button>
                     </div>
                 )}
 
                 <form onSubmit={submit} className="space-y-8">
                     {/* Section 1: Basic Info */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <Building2 className="h-4 w-4 text-emerald-600" />
+                    <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-xs">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                            <Building2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                             1. Basic Information
                         </h3>
 
@@ -149,7 +149,7 @@ export default function OwnerPropertiesCreate() {
                                 <InputLabel htmlFor="title" value="Property Listing Title" />
                                 <TextInput
                                     id="title"
-                                    className="mt-1 block w-full rounded-xl border-slate-300"
+                                    className="mt-1 block w-full rounded-xl"
                                     placeholder="e.g. Spacious 2BR Apartment with Lift & Parquet, Sanchaung"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
@@ -164,12 +164,12 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="listing_type" value="Listing Purpose" />
                                     <select
                                         id="listing_type"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                         value={data.listing_type}
                                         onChange={(e) => setData('listing_type', e.target.value)}
                                     >
-                                        <option value="rent">For Rent (အငှား)</option>
-                                        <option value="sale">For Sale (အရောင်း)</option>
+                                        <option value="rent" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">For Rent (အငှား)</option>
+                                        <option value="sale" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">For Sale (အရောင်း)</option>
                                     </select>
                                 </div>
 
@@ -177,15 +177,15 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="property_type" value="Property Type" />
                                     <select
                                         id="property_type"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                         value={data.property_type}
                                         onChange={(e) => setData('property_type', e.target.value)}
                                     >
-                                        <option value="apartment">Apartment (တိုက်ခန်း)</option>
-                                        <option value="condo">Condo (ကွန်ဒို)</option>
-                                        <option value="house">Whole House (လုံးချင်းအိမ်)</option>
-                                        <option value="office">Office (ရုံးခန်း)</option>
-                                        <option value="shop">Shop / Commercial (ဆိုင်ခန်း)</option>
+                                        <option value="apartment" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Apartment (တိုက်ခန်း)</option>
+                                        <option value="condo" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Condo (ကွန်ဒို)</option>
+                                        <option value="house" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Whole House (လုံးချင်းအိမ်)</option>
+                                        <option value="office" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Office (ရုံးခန်း)</option>
+                                        <option value="shop" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Shop / Commercial (ဆိုင်ခန်း)</option>
                                     </select>
                                 </div>
 
@@ -193,12 +193,12 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="township" value="Township (Yangon)" />
                                     <select
                                         id="township"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                         value={data.township}
                                         onChange={(e) => setData('township', e.target.value)}
                                     >
                                         {YANGON_TOWNSHIPS.map((t) => (
-                                            <option key={t.id} value={t.en}>
+                                            <option key={t.id} value={t.en} className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">
                                                 {lang === 'mm' ? `${t.mm} (${t.en})` : `${t.en} [${t.mm}]`}
                                             </option>
                                         ))}
@@ -210,7 +210,7 @@ export default function OwnerPropertiesCreate() {
                                 <InputLabel htmlFor="address" value="Street Address" />
                                 <TextInput
                                     id="address"
-                                    className="mt-1 block w-full rounded-xl border-slate-300"
+                                    className="mt-1 block w-full rounded-xl"
                                     placeholder="e.g. No. 128, Shin Saw Pu Road, Sanchaung"
                                     value={data.address}
                                     onChange={(e) => setData('address', e.target.value)}
@@ -225,7 +225,7 @@ export default function OwnerPropertiesCreate() {
                                 <textarea
                                     id="description"
                                     rows="4"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                    className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500 placeholder:text-slate-400 dark:placeholder:text-zinc-500"
                                     placeholder="Describe surrounding environment, nearby markets, bus stops, building age, natural lighting..."
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
@@ -238,9 +238,9 @@ export default function OwnerPropertiesCreate() {
                     </div>
 
                     {/* Section 2: Dimensions & Floor Specs */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <Layers className="h-4 w-4 text-emerald-600" />
+                    <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-xs">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                            <Layers className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                             2. Dimensions, Area & Floor Level
                         </h3>
 
@@ -251,7 +251,7 @@ export default function OwnerPropertiesCreate() {
                                     id="width_ft"
                                     type="number"
                                     step="0.5"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 font-mono"
+                                    className="mt-1 block w-full rounded-xl font-mono"
                                     value={data.width_ft}
                                     onChange={(e) => setData('width_ft', e.target.value)}
                                     required
@@ -264,7 +264,7 @@ export default function OwnerPropertiesCreate() {
                                     id="length_ft"
                                     type="number"
                                     step="0.5"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 font-mono"
+                                    className="mt-1 block w-full rounded-xl font-mono"
                                     value={data.length_ft}
                                     onChange={(e) => setData('length_ft', e.target.value)}
                                     required
@@ -273,7 +273,7 @@ export default function OwnerPropertiesCreate() {
 
                             <div>
                                 <InputLabel value="Calculated Area" />
-                                <div className="mt-1 flex h-10 items-center rounded-xl bg-slate-50 px-3 font-mono font-bold text-emerald-700 text-sm border border-slate-200">
+                                <div className="mt-1 flex h-10 items-center rounded-xl bg-slate-50 dark:bg-zinc-800 px-3 font-mono font-bold text-emerald-700 dark:text-emerald-400 text-sm border border-slate-200 dark:border-zinc-700">
                                     {calculatedSqft} sqft
                                 </div>
                             </div>
@@ -282,22 +282,22 @@ export default function OwnerPropertiesCreate() {
                                 <InputLabel htmlFor="floor_level" value="Floor Level" />
                                 <select
                                     id="floor_level"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                    className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                     value={data.floor_level}
                                     onChange={(e) => setData('floor_level', e.target.value)}
                                 >
-                                    <option value="ground">Ground Floor [မြေညီထပ်]</option>
-                                    <option value="mezzanine">Mezzanine [မှန်ခန်း]</option>
-                                    <option value="1st">1st Floor [၁ လွှာ]</option>
-                                    <option value="2nd">2nd Floor [၂ လွှာ]</option>
-                                    <option value="3rd">3rd Floor [၃ လွှာ]</option>
-                                    <option value="4th">4th Floor [၄ လွှာ]</option>
-                                    <option value="5th">5th Floor [၅ လွှာ]</option>
-                                    <option value="6th">6th Floor [၆ လွှာ]</option>
-                                    <option value="7th">7th Floor [၇ လွှာ]</option>
-                                    <option value="8th">8th Floor [၈ လွှာ]</option>
-                                    <option value="penthouse">Penthouse [ခေါင်မိုးထပ်]</option>
-                                    <option value="whole_house">Whole House [လုံးချင်းအိမ်]</option>
+                                    <option value="ground" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Ground Floor [မြေညီထပ်]</option>
+                                    <option value="mezzanine" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Mezzanine [မှန်ခန်း]</option>
+                                    <option value="1st" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">1st Floor [၁ လွှာ]</option>
+                                    <option value="2nd" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">2nd Floor [၂ လွှာ]</option>
+                                    <option value="3rd" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">3rd Floor [၃ လွှာ]</option>
+                                    <option value="4th" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">4th Floor [၄ လွှာ]</option>
+                                    <option value="5th" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">5th Floor [၅ လွှာ]</option>
+                                    <option value="6th" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">6th Floor [၆ လွှာ]</option>
+                                    <option value="7th" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">7th Floor [၇ လွှာ]</option>
+                                    <option value="8th" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">8th Floor [၈ လွှာ]</option>
+                                    <option value="penthouse" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Penthouse [ခေါင်မိုးထပ်]</option>
+                                    <option value="whole_house" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Whole House [လုံးချင်းအိမ်]</option>
                                 </select>
                             </div>
                         </div>
@@ -309,7 +309,7 @@ export default function OwnerPropertiesCreate() {
                                     id="bedrooms"
                                     type="number"
                                     min="0"
-                                    className="mt-1 block w-full rounded-xl border-slate-300"
+                                    className="mt-1 block w-full rounded-xl"
                                     value={data.bedrooms}
                                     onChange={(e) => setData('bedrooms', e.target.value)}
                                     required
@@ -322,7 +322,7 @@ export default function OwnerPropertiesCreate() {
                                     id="bathrooms"
                                     type="number"
                                     min="1"
-                                    className="mt-1 block w-full rounded-xl border-slate-300"
+                                    className="mt-1 block w-full rounded-xl"
                                     value={data.bathrooms}
                                     onChange={(e) => setData('bathrooms', e.target.value)}
                                     required
@@ -332,9 +332,9 @@ export default function OwnerPropertiesCreate() {
                     </div>
 
                     {/* Section 3: Interior & Facilities */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <Sparkles className="h-4 w-4 text-emerald-600" />
+                    <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-xs">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                            <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                             3. Facilities & Interior Specs
                         </h3>
 
@@ -343,13 +343,13 @@ export default function OwnerPropertiesCreate() {
                                 <InputLabel htmlFor="toilet_type" value="Toilet Type (အိမ်သာ)" />
                                 <select
                                     id="toilet_type"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                    className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                     value={data.toilet_type}
                                     onChange={(e) => setData('toilet_type', e.target.value)}
                                 >
-                                    <option value="western">Western Sitting [ဘိုထိုင်]</option>
-                                    <option value="squat">Squat [ရိုးရိုး]</option>
-                                    <option value="both">Both [ဘိုထိုင် + ရိုးရိုး]</option>
+                                    <option value="western" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Western Sitting [ဘိုထိုင်]</option>
+                                    <option value="squat" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Squat [ရိုးရိုး]</option>
+                                    <option value="both" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Both [ဘိုထိုင် + ရိုးရိုး]</option>
                                 </select>
                             </div>
 
@@ -359,7 +359,7 @@ export default function OwnerPropertiesCreate() {
                                     id="aircon_count"
                                     type="number"
                                     min="0"
-                                    className="mt-1 block w-full rounded-xl border-slate-300"
+                                    className="mt-1 block w-full rounded-xl"
                                     value={data.aircon_count}
                                     onChange={(e) => setData('aircon_count', e.target.value)}
                                 />
@@ -369,14 +369,14 @@ export default function OwnerPropertiesCreate() {
                                 <InputLabel htmlFor="flooring_type" value="Flooring Type (ကြမ်းခင်း)" />
                                 <select
                                     id="flooring_type"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                    className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                     value={data.flooring_type}
                                     onChange={(e) => setData('flooring_type', e.target.value)}
                                 >
-                                    <option value="parquet">Parquet [ပါကေး]</option>
-                                    <option value="tiles">Tiles [ကြွေပြား]</option>
-                                    <option value="vinyl">Korean Vinyl [ကိုရီးယားပါကေး]</option>
-                                    <option value="cement_wood">Cement / Wood [ရိုးရိုး]</option>
+                                    <option value="parquet" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Parquet [ပါကေး]</option>
+                                    <option value="tiles" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Tiles [ကြွေပြား]</option>
+                                    <option value="vinyl" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Korean Vinyl [ကိုရီးယားပါကေး]</option>
+                                    <option value="cement_wood" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Cement / Wood [ရိုးရိုး]</option>
                                 </select>
                             </div>
                         </div>
@@ -397,13 +397,13 @@ export default function OwnerPropertiesCreate() {
                                         key={item.id}
                                         className={`flex items-center gap-2 rounded-xl border p-3 text-xs font-semibold cursor-pointer transition ${
                                             data.amenities.includes(item.id)
-                                                ? 'border-emerald-500 bg-emerald-50/50 text-emerald-900 ring-1 ring-emerald-500'
-                                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                                                ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500'
+                                                : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800/60 text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800'
                                         }`}
                                     >
                                         <input
                                             type="checkbox"
-                                            className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                            className="rounded border-slate-300 dark:border-zinc-700 text-emerald-600 focus:ring-emerald-500"
                                             checked={data.amenities.includes(item.id)}
                                             onChange={() => toggleArrayItem('amenities', item.id)}
                                         />
@@ -415,9 +415,9 @@ export default function OwnerPropertiesCreate() {
                     </div>
 
                     {/* Section 4: Pricing & Lease/Sale Terms */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <DollarSign className="h-4 w-4 text-emerald-600" />
+                    <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-xs">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                             4. Pricing & {data.listing_type === 'rent' ? 'Rental Terms' : 'Sale Ownership Documents'}
                         </h3>
 
@@ -431,7 +431,7 @@ export default function OwnerPropertiesCreate() {
                                     id="price"
                                     type="number"
                                     step="10000"
-                                    className="mt-1 block w-full rounded-xl border-slate-300 font-mono text-base font-bold text-emerald-700"
+                                    className="mt-1 block w-full rounded-xl font-mono text-base font-bold text-emerald-700 dark:text-emerald-400"
                                     placeholder="e.g. 400000"
                                     value={data.price}
                                     onChange={(e) => setData('price', e.target.value)}
@@ -447,7 +447,7 @@ export default function OwnerPropertiesCreate() {
                                         id="security_deposit"
                                         type="number"
                                         step="10000"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 font-mono"
+                                        className="mt-1 block w-full rounded-xl font-mono"
                                         placeholder="e.g. 400000"
                                         value={data.security_deposit}
                                         onChange={(e) => setData('security_deposit', e.target.value)}
@@ -458,14 +458,14 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="ownership_type" value="Ownership Document Type (ပိုင်ဆိုင်မှု စာရွက်စာတမ်း)" />
                                     <select
                                         id="ownership_type"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                         value={data.ownership_type}
                                         onChange={(e) => setData('ownership_type', e.target.value)}
                                     >
-                                        <option value="bcc_ready">BCC Approved [BCC ကျပြီး]</option>
-                                        <option value="grant_60_years">60-Year Grant [နှစ် ၆၀ ဂရန်]</option>
-                                        <option value="freehold">Freehold Land [ဘိုးဘွားပိုင်မြေ]</option>
-                                        <option value="permit">Township Permit [ပါမစ်မြေ]</option>
+                                        <option value="bcc_ready" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">BCC Approved [BCC ကျပြီး]</option>
+                                        <option value="grant_60_years" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">60-Year Grant [နှစ် ၆၀ ဂရန်]</option>
+                                        <option value="freehold" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Freehold Land [ဘိုးဘွားပိုင်မြေ]</option>
+                                        <option value="permit" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">Township Permit [ပါမစ်မြေ]</option>
                                     </select>
                                 </div>
                             )}
@@ -477,14 +477,14 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="min_contract_months" value="Min Contract Duration (Months)" />
                                     <select
                                         id="min_contract_months"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm"
                                         value={data.min_contract_months}
                                         onChange={(e) => setData('min_contract_months', e.target.value)}
                                     >
-                                        <option value="3">3 Months</option>
-                                        <option value="6">6 Months (စံနှုန်း)</option>
-                                        <option value="12">12 Months (၁ နှစ်)</option>
-                                        <option value="24">24 Months (၂ နှစ်)</option>
+                                        <option value="3" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">3 Months</option>
+                                        <option value="6" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">6 Months (စံနှုန်း)</option>
+                                        <option value="12" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">12 Months (၁ နှစ်)</option>
+                                        <option value="24" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">24 Months (၂ နှစ်)</option>
                                     </select>
                                 </div>
 
@@ -492,14 +492,14 @@ export default function OwnerPropertiesCreate() {
                                     <InputLabel htmlFor="advance_payment_months" value="Advance Rent Payment (Months)" />
                                     <select
                                         id="advance_payment_months"
-                                        className="mt-1 block w-full rounded-xl border-slate-300 text-sm"
+                                        className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 text-sm"
                                         value={data.advance_payment_months}
                                         onChange={(e) => setData('advance_payment_months', e.target.value)}
                                     >
-                                        <option value="1">1 Month Advance</option>
-                                        <option value="3">3 Months Advance</option>
-                                        <option value="6">6 Months Advance</option>
-                                        <option value="12">1 Year Advance</option>
+                                        <option value="1" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">1 Month Advance</option>
+                                        <option value="3" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">3 Months Advance</option>
+                                        <option value="6" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">6 Months Advance</option>
+                                        <option value="12" className="bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100">1 Year Advance</option>
                                     </select>
                                 </div>
                             </div>
@@ -519,13 +519,13 @@ export default function OwnerPropertiesCreate() {
                                             key={rule.id}
                                             className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold cursor-pointer transition ${
                                                 data.house_rules.includes(rule.id)
-                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-900'
-                                                    : 'border-slate-200 bg-white text-slate-700'
+                                                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500'
+                                                    : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800/60 text-slate-700 dark:text-zinc-300'
                                             }`}
                                         >
                                             <input
                                                 type="checkbox"
-                                                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                                className="rounded border-slate-300 dark:border-zinc-700 text-emerald-600 focus:ring-emerald-500"
                                                 checked={data.house_rules.includes(rule.id)}
                                                 onChange={() => toggleArrayItem('house_rules', rule.id)}
                                             />
@@ -538,19 +538,19 @@ export default function OwnerPropertiesCreate() {
                     </div>
 
                     {/* Section 5: Photos */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <UploadCloud className="h-4 w-4 text-emerald-600" />
+                    <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-xs">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-zinc-800 pb-3 flex items-center gap-2">
+                            <UploadCloud className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                             5. Property Photographs
                         </h3>
 
                         <div className="mt-4">
-                            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center hover:bg-slate-100 transition">
-                                <UploadCloud className="h-10 w-10 text-slate-400" />
-                                <span className="mt-2 text-sm font-semibold text-slate-700">
+                            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/40 p-6 text-center hover:bg-slate-100 dark:hover:bg-zinc-800 transition">
+                                <UploadCloud className="h-10 w-10 text-slate-400 dark:text-zinc-500" />
+                                <span className="mt-2 text-sm font-semibold text-slate-700 dark:text-zinc-200">
                                     Upload Multiple Property Photos
                                 </span>
-                                <span className="text-xs text-slate-500 mt-0.5">
+                                <span className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
                                     Living room, bedrooms, kitchen, bathroom, building front (PNG/JPG up to 5MB each)
                                 </span>
                                 <input
@@ -558,7 +558,7 @@ export default function OwnerPropertiesCreate() {
                                     multiple
                                     accept="image/*"
                                     onChange={handleImagesChange}
-                                    className="mt-4 block text-xs text-slate-500 file:mr-2 file:rounded-xl file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-slate-800"
+                                    className="mt-4 block text-xs text-slate-500 dark:text-zinc-400 file:mr-2 file:rounded-xl file:border-0 file:bg-slate-900 dark:file:bg-zinc-700 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-slate-800 dark:hover:file:bg-zinc-600 cursor-pointer"
                                     required
                                 />
                             </div>
@@ -568,9 +568,9 @@ export default function OwnerPropertiesCreate() {
                             {imagePreviews.length > 0 && (
                                 <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
                                     {imagePreviews.map((src, i) => (
-                                        <div key={i} className="relative aspect-video rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                                        <div key={i} className="relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-700 shadow-xs">
                                             <img src={src} alt="Upload Preview" className="h-full w-full object-cover" />
-                                            <span className="absolute bottom-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
+                                            <span className="absolute bottom-1 right-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] text-white">
                                                 Photo {i + 1}
                                             </span>
                                         </div>
@@ -584,12 +584,12 @@ export default function OwnerPropertiesCreate() {
                     <div className="flex items-center justify-end gap-3 pt-4">
                         <Link
                             href={route('owner.properties.index')}
-                            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                            className="rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-5 py-2.5 text-xs font-semibold text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700 transition"
                         >
                             Cancel
                         </Link>
                         <PrimaryButton
-                            className="bg-emerald-600 hover:bg-emerald-700 rounded-xl px-6 py-2.5 text-xs font-bold gap-2"
+                            className="rounded-xl px-6 py-2.5 text-xs font-bold gap-2"
                             disabled={processing}
                         >
                             <CheckCircle2 className="h-4 w-4" />

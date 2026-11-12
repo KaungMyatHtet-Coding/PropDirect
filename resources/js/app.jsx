@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { LanguageProvider } from './Contexts/LanguageContext';
+import { ThemeProvider } from './Contexts/ThemeContext';
 
 const appName = import.meta.env.VITE_APP_NAME || 'PropDirect';
 
@@ -19,9 +20,11 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <LanguageProvider>
-                <App {...props} />
-            </LanguageProvider>
+            <ThemeProvider>
+                <LanguageProvider>
+                    <App {...props} />
+                </LanguageProvider>
+            </ThemeProvider>
         );
     },
     progress: {

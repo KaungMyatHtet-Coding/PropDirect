@@ -43,7 +43,9 @@ class OwnerVerificationTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.verifications.index'));
+        $response = $this->actingAs($admin)
+            ->withSession(['admin_secondary_verified' => true])
+            ->get(route('admin.verifications.index'));
 
         $response->assertStatus(200);
     }
@@ -93,9 +95,11 @@ class OwnerVerificationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($admin)->post(route('admin.verifications.approve', $verification), [
-            'admin_remark' => 'All documents verified and legitimate.',
-        ]);
+        $response = $this->actingAs($admin)
+            ->withSession(['admin_secondary_verified' => true])
+            ->post(route('admin.verifications.approve', $verification), [
+                'admin_remark' => 'All documents verified and legitimate.',
+            ]);
 
         $response->assertSessionHas('success');
 
@@ -129,9 +133,11 @@ class OwnerVerificationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($admin)->post(route('admin.verifications.reject', $verification), [
-            'admin_remark' => 'Utility meter bill name does not match NRC card.',
-        ]);
+        $response = $this->actingAs($admin)
+            ->withSession(['admin_secondary_verified' => true])
+            ->post(route('admin.verifications.reject', $verification), [
+                'admin_remark' => 'Utility meter bill name does not match NRC card.',
+            ]);
 
         $response->assertSessionHas('success');
 

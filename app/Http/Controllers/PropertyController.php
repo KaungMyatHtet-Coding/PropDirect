@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LawyerProfile;
 use App\Models\Property;
+use App\Models\SearchLog;
 use App\Services\MyanmarFontService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -124,6 +125,23 @@ class PropertyController extends Controller
 
         if ($amenity !== 'all' && ! empty($amenity)) {
             $query->whereJsonContains('amenities', $amenity);
+        }
+
+        // Record search log for market demand analytics if any filter is set
+        if (($township !== 'all' && ! empty($township)) ||
+            ! empty($listingType) ||
+            ($dimensionPreset !== 'all' && ! empty($dimensionPreset)) ||
+            ($floorLevel !== 'all' && ! empty($floorLevel)) ||
+            $targetPrice > 0
+        ) {
+            SearchLog::create([
+                'user_id' => auth()->id(),
+                'township' => ($township !== 'all' && ! empty($township)) ? $township : null,
+                'listing_type' => in_array($listingType, ['rent', 'sale'], true) ? $listingType : null,
+                'dimension_preset' => ($dimensionPreset !== 'all' && ! empty($dimensionPreset)) ? $dimensionPreset : null,
+                'floor_level' => ($floorLevel !== 'all' && ! empty($floorLevel)) ? $floorLevel : null,
+                'target_price' => $targetPrice > 0 ? $targetPrice : null,
+            ]);
         }
 
         $properties = $query->latest()->paginate(12)->withQueryString();

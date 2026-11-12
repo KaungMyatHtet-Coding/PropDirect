@@ -14,9 +14,14 @@ class OwnerVerificationController extends Controller
     /**
      * Display the owner verification submission page and status.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
         $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Admin accounts are strictly for platform governance and cannot list, rent, or buy properties to prevent conflict of interest.');
+        }
         
         $latestVerification = OwnerVerification::with('reviewer:id,name')
             ->where('user_id', $user->id)
@@ -42,6 +47,11 @@ class OwnerVerificationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Admin accounts are strictly for platform governance and cannot list, rent, or buy properties to prevent conflict of interest.');
+        }
 
         // Check if there is already an active pending application
         $pendingVerification = OwnerVerification::where('user_id', $user->id)

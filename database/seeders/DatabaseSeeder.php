@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\AppNotification;
 use App\Models\LawyerProfile;
 use App\Models\OwnerVerification;
 use App\Models\Property;
+use App\Models\SearchLog;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -136,6 +139,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'PropDirect Administrator',
                 'phone' => '09999000111',
                 'password' => Hash::make('password'),
+                'secondary_password' => Hash::make('admin1234'),
                 'role' => 'admin',
                 'is_verified_owner' => false,
                 'avatar' => 'avatars/dummy_admin.png',
@@ -481,8 +485,92 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $this->command->info('Phase 2 Seeding completed successfully!');
-        $this->command->info('Admin: admin@propdirect.com / password');
+        // 7. Seed 25 Realistic Search Logs for Market Demand Analytics
+        $searchSamples = [
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '2nd', 'target_price' => 400000, 'days_ago' => 0],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '1st', 'target_price' => 380000, 'days_ago' => 0],
+            ['township' => 'Hlaing', 'listing_type' => 'rent', 'dimension_preset' => '12.5x50', 'floor_level' => '3rd', 'target_price' => 350000, 'days_ago' => 1],
+            ['township' => 'Kamayut', 'listing_type' => 'rent', 'dimension_preset' => '20x60', 'floor_level' => '4th', 'target_price' => 450000, 'days_ago' => 1],
+            ['township' => 'Yankin', 'listing_type' => 'rent', 'dimension_preset' => '20x60', 'floor_level' => '5th', 'target_price' => 500000, 'days_ago' => 1],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '2nd', 'target_price' => 400000, 'days_ago' => 2],
+            ['township' => 'Tamwe', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '1st', 'target_price' => 380000, 'days_ago' => 2],
+            ['township' => 'South Okkalapa', 'listing_type' => 'rent', 'dimension_preset' => '40x60', 'floor_level' => 'whole_house', 'target_price' => 1200000, 'days_ago' => 2],
+            ['township' => 'Hlaing', 'listing_type' => 'rent', 'dimension_preset' => '12.5x50', 'floor_level' => '2nd', 'target_price' => 320000, 'days_ago' => 3],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '3rd', 'target_price' => 420000, 'days_ago' => 3],
+            ['township' => 'North Dagon', 'listing_type' => 'sale', 'dimension_preset' => '40x60', 'floor_level' => 'whole_house', 'target_price' => 350000000, 'days_ago' => 3],
+            ['township' => 'Bahan', 'listing_type' => 'rent', 'dimension_preset' => '25x50', 'floor_level' => '2nd', 'target_price' => 700000, 'days_ago' => 4],
+            ['township' => 'Kamayut', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => 'ground', 'target_price' => 450000, 'days_ago' => 4],
+            ['township' => 'Yankin', 'listing_type' => 'rent', 'dimension_preset' => '20x60', 'floor_level' => '3rd', 'target_price' => 480000, 'days_ago' => 4],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '1st', 'target_price' => 390000, 'days_ago' => 5],
+            ['township' => 'Hlaing', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '2nd', 'target_price' => 370000, 'days_ago' => 5],
+            ['township' => 'Tamwe', 'listing_type' => 'rent', 'dimension_preset' => '12.5x50', 'floor_level' => 'ground', 'target_price' => 330000, 'days_ago' => 5],
+            ['township' => 'Bahan', 'listing_type' => 'sale', 'dimension_preset' => '40x60', 'floor_level' => 'whole_house', 'target_price' => 800000000, 'days_ago' => 6],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '12.5x50', 'floor_level' => '3rd', 'target_price' => 340000, 'days_ago' => 6],
+            ['township' => 'Kamayut', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '2nd', 'target_price' => 410000, 'days_ago' => 6],
+            ['township' => 'Yankin', 'listing_type' => 'rent', 'dimension_preset' => '20x60', 'floor_level' => '5th', 'target_price' => 460000, 'days_ago' => 6],
+            ['township' => 'South Okkalapa', 'listing_type' => 'rent', 'dimension_preset' => '40x60', 'floor_level' => 'whole_house', 'target_price' => 1100000, 'days_ago' => 6],
+            ['township' => 'Sanchaung', 'listing_type' => 'rent', 'dimension_preset' => '15x60', 'floor_level' => '2nd', 'target_price' => 400000, 'days_ago' => 0],
+            ['township' => 'Hlaing', 'listing_type' => 'rent', 'dimension_preset' => '12.5x50', 'floor_level' => '1st', 'target_price' => 360000, 'days_ago' => 0],
+            ['township' => 'Yankin', 'listing_type' => 'rent', 'dimension_preset' => '20x60', 'floor_level' => '4th', 'target_price' => 450000, 'days_ago' => 0],
+        ];
+
+        foreach ($searchSamples as $s) {
+            $createdTime = Carbon::now()->subDays($s['days_ago'])->subHours(rand(1, 10));
+            SearchLog::create([
+                'user_id' => $seeker->id,
+                'township' => $s['township'],
+                'listing_type' => $s['listing_type'],
+                'dimension_preset' => $s['dimension_preset'],
+                'floor_level' => $s['floor_level'],
+                'target_price' => $s['target_price'],
+                'created_at' => $createdTime,
+                'updated_at' => $createdTime,
+            ]);
+        }
+
+        // 8. Seed Sample App Notifications
+        AppNotification::create([
+            'user_id' => $admin->id,
+            'title' => 'KYC Application Pending Audit',
+            'message' => 'Ko Kyaw Swar submitted National Registration Card and YESC meter bill for ownership verification.',
+            'type' => 'verification',
+            'action_url' => route('admin.verifications.index'),
+            'read_at' => null,
+            'created_at' => now()->subHours(2),
+        ]);
+
+        AppNotification::create([
+            'user_id' => $admin->id,
+            'title' => 'Bar Council Advocate Verified',
+            'message' => 'Daw Mya Mya advocate license credentials ADV-10492/2012 successfully verified and activated.',
+            'type' => 'system',
+            'action_url' => route('admin.lawyers.index'),
+            'read_at' => now()->subHours(5),
+            'created_at' => now()->subHours(6),
+        ]);
+
+        AppNotification::create([
+            'user_id' => $owner->id,
+            'title' => 'Ownership Verification Approved ✓',
+            'message' => 'Congratulations! Your owner verification has been approved. You can now post direct properties.',
+            'type' => 'verification',
+            'action_url' => route('owner.properties.create'),
+            'read_at' => null,
+            'created_at' => now()->subDays(1),
+        ]);
+
+        AppNotification::create([
+            'user_id' => $seeker->id,
+            'title' => 'Welcome to PropDirect P2P',
+            'message' => 'Explore 100% verified, zero-broker real estate listings directly in Yangon.',
+            'type' => 'system',
+            'action_url' => route('properties.index'),
+            'read_at' => null,
+            'created_at' => now()->subDays(2),
+        ]);
+
+        $this->command->info('Phase 2.5 Seeding completed successfully!');
+        $this->command->info('Admin: admin@propdirect.com / password (Secondary: admin1234)');
         $this->command->info('Owner: owner@propdirect.com / password (with 6 Yangon properties)');
         $this->command->info('Seeker: seeker@propdirect.com / password (with pending KYC application)');
         $this->command->info('Lawyer 1 (Advocate): lawyer1@propdirect.com / password');

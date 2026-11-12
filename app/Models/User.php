@@ -33,6 +33,11 @@ class User extends Authenticatable
         'is_verified_owner',
         'is_profile_complete',
         'telegram_chat_id',
+        'secondary_password',
+        'is_blocked',
+        'blocked_reason',
+        'blocked_at',
+        'last_login_at',
     ];
 
     /**
@@ -43,6 +48,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'secondary_password',
     ];
 
     /**
@@ -55,8 +61,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'secondary_password' => 'hashed',
             'is_verified_owner' => 'boolean',
             'is_profile_complete' => 'boolean',
+            'is_blocked' => 'boolean',
+            'blocked_at' => 'datetime',
+            'last_login_at' => 'datetime',
         ];
     }
 
@@ -78,6 +88,11 @@ class User extends Authenticatable
     public function isLawyer(): bool
     {
         return $this->role === 'lawyer';
+    }
+
+    public function isBlocked(): bool
+    {
+        return (bool) $this->is_blocked;
     }
 
     /**
@@ -142,5 +157,20 @@ class User extends Authenticatable
     public function contractsAsTenant(): HasMany
     {
         return $this->hasMany(Contract::class, 'tenant_id');
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(AppNotification::class);
+    }
+
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(UserFeedback::class);
+    }
+
+    public function searchLogs(): HasMany
+    {
+        return $this->hasMany(SearchLog::class);
     }
 }

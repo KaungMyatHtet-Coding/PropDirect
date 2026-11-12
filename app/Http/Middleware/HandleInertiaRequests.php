@@ -50,6 +50,10 @@ class HandleInertiaRequests extends Middleware
                     'email_verified_at' => $user->email_verified_at,
                 ] : null,
             ],
+            'notifications' => $user ? [
+                'unread_count' => $user->notifications()->whereNull('read_at')->count(),
+                'recent' => $user->notifications()->latest()->take(6)->get(),
+            ] : null,
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

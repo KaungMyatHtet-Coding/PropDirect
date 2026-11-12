@@ -19,8 +19,14 @@ class EnsureVerifiedOwner
             return redirect()->route('login');
         }
 
-        // Admin bypass or verified owner
-        if ($user->isAdmin() || ($user->isOwner() && $user->is_verified_owner)) {
+        // Strict Separation of Duties: Admins cannot post or manage properties
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Admin accounts are strictly for platform governance and cannot list, rent, or buy properties to prevent conflict of interest.');
+        }
+
+        // Only genuine verified owners allowed
+        if ($user->isOwner() && $user->is_verified_owner) {
             return $next($request);
         }
 

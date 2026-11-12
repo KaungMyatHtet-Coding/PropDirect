@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
+            \App\Http\Middleware\EnsureNotBlocked::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
             'verified.owner' => \App\Http\Middleware\EnsureVerifiedOwner::class,
+            'admin.secondary' => \App\Http\Middleware\EnsureAdminSecondaryVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

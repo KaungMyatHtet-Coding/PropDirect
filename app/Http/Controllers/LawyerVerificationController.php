@@ -14,9 +14,15 @@ class LawyerVerificationController extends Controller
     /**
      * Show lawyer verification application form and current status.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
         $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Admin accounts are strictly for platform governance and cannot list, rent, or buy properties to prevent conflict of interest.');
+        }
+
         $profile = LawyerProfile::where('user_id', $user->id)->first();
 
         return Inertia::render('LawyerVerification/Index', [
@@ -39,6 +45,11 @@ class LawyerVerificationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Admin accounts are strictly for platform governance and cannot list, rent, or buy properties to prevent conflict of interest.');
+        }
 
         $existing = LawyerProfile::where('user_id', $user->id)
             ->where('status', 'pending')
