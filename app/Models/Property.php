@@ -25,7 +25,18 @@ class Property extends Model
         'address',
         'bedrooms',
         'bathrooms',
+        'width_ft',
+        'length_ft',
         'area_sqft',
+        'floor_level',
+        'toilet_type',
+        'aircon_count',
+        'flooring_type',
+        'amenities',
+        'house_rules',
+        'min_contract_months',
+        'advance_payment_months',
+        'ownership_type',
         'status',
         'images',
     ];
@@ -35,11 +46,27 @@ class Property extends Model
         return [
             'price' => 'decimal:2',
             'security_deposit' => 'decimal:2',
-            'images' => 'array',
+            'width_ft' => 'decimal:2',
+            'length_ft' => 'decimal:2',
+            'area_sqft' => 'integer',
             'bedrooms' => 'integer',
             'bathrooms' => 'integer',
-            'area_sqft' => 'integer',
+            'aircon_count' => 'integer',
+            'min_contract_months' => 'integer',
+            'advance_payment_months' => 'integer',
+            'amenities' => 'array',
+            'house_rules' => 'array',
+            'images' => 'array',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Property $property) {
+            if ($property->width_ft && $property->length_ft) {
+                $property->area_sqft = (int) round($property->width_ft * $property->length_ft);
+            }
+        });
     }
 
     public function owner(): BelongsTo

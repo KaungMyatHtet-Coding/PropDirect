@@ -29,18 +29,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'phone' => $request->user()->phone,
-                    'role' => $request->user()->role,
-                    'is_verified_owner' => (bool) $request->user()->is_verified_owner,
-                    'telegram_chat_id' => $request->user()->telegram_chat_id,
-                    'email_verified_at' => $request->user()->email_verified_at,
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'role' => $user->role,
+                    'avatar' => $user->avatar,
+                    'occupation' => $user->occupation,
+                    'current_address' => $user->current_address,
+                    'nrc_number' => $user->nrc_number,
+                    'is_verified_owner' => (bool) $user->is_verified_owner,
+                    'is_profile_complete' => (bool) $user->is_profile_complete,
+                    'telegram_chat_id' => $user->telegram_chat_id,
+                    'email_verified_at' => $user->email_verified_at,
                 ] : null,
             ],
             'flash' => [

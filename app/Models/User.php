@@ -26,7 +26,12 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'avatar',
+        'occupation',
+        'current_address',
+        'nrc_number',
         'is_verified_owner',
+        'is_profile_complete',
         'telegram_chat_id',
     ];
 
@@ -51,6 +56,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_verified_owner' => 'boolean',
+            'is_profile_complete' => 'boolean',
         ];
     }
 
@@ -69,6 +75,30 @@ class User extends Authenticatable
         return $this->role === 'seeker';
     }
 
+    public function isLawyer(): bool
+    {
+        return $this->role === 'lawyer';
+    }
+
+    /**
+     * Automatically evaluate profile completion.
+     * Profile is complete when avatar, phone, occupation, and current_address are set.
+     */
+    public function checkAndUpdateProfileCompletion(): bool
+    {
+        $complete = ! empty($this->avatar)
+            && ! empty($this->phone)
+            && ! empty($this->occupation)
+            && ! empty($this->current_address);
+
+        if ($this->is_profile_complete !== $complete) {
+            $this->is_profile_complete = $complete;
+            $this->save();
+        }
+
+        return $complete;
+    }
+
     public function ownerVerification(): HasOne
     {
         return $this->hasOne(OwnerVerification::class)->latestOfMany();
@@ -77,6 +107,11 @@ class User extends Authenticatable
     public function ownerVerifications(): HasMany
     {
         return $this->hasMany(OwnerVerification::class);
+    }
+
+    public function lawyerProfile(): HasOne
+    {
+        return $this->hasOne(LawyerProfile::class);
     }
 
     public function reviewedVerifications(): HasMany
