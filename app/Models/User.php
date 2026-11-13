@@ -173,4 +173,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(SearchLog::class);
     }
+
+    public function viewingMessages(): HasMany
+    {
+        return $this->hasMany(ViewingMessage::class, 'sender_id');
+    }
+
+    public function lawyerInquiriesAsClient(): HasMany
+    {
+        return $this->hasMany(LawyerInquiry::class, 'client_id');
+    }
+
+    public function lawyerInquiriesAsLawyer(): HasMany
+    {
+        return $this->hasMany(LawyerInquiry::class, 'lawyer_user_id');
+    }
 }

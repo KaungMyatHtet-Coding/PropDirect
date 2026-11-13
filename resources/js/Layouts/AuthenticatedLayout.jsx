@@ -9,6 +9,7 @@ import {
     ArrowRight,
     Bell,
     Building2,
+    Calendar,
     Check,
     CheckCircle,
     ChevronDown,
@@ -303,6 +304,20 @@ export default function AuthenticatedLayout({ header, breadcrumbs, children }) {
                                         <Users className="h-4 w-4 shrink-0 text-blue-500" />
                                         {!collapsed && <span>User Management</span>}
                                     </Link>
+
+                                    {/* Platform Transactions & Audits */}
+                                    <Link
+                                        href={route('admin.transactions.index')}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                                            route().current('admin.transactions.*')
+                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-white'
+                                        } ${collapsed ? 'justify-center px-2' : ''}`}
+                                        title="Platform Transactions & Audits"
+                                    >
+                                        <TrendingUp className="h-4 w-4 shrink-0 text-purple-500" />
+                                        {!collapsed && <span>Platform Audits</span>}
+                                    </Link>
                                 </>
                             )}
 
@@ -348,6 +363,16 @@ export default function AuthenticatedLayout({ header, breadcrumbs, children }) {
                                                         }`}
                                                     >
                                                         + Post New Unit
+                                                    </Link>
+                                                    <Link
+                                                        href={route('owner.viewings.index')}
+                                                        className={`block px-2.5 py-1.5 rounded-lg text-xs font-medium transition ${
+                                                            route().current('owner.viewings.*')
+                                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+                                                        }`}
+                                                    >
+                                                        Viewing Requests
                                                     </Link>
                                                 </div>
                                             )}
@@ -412,6 +437,53 @@ export default function AuthenticatedLayout({ header, breadcrumbs, children }) {
                                         </Link>
                                     )}
                                 </div>
+                            )}
+
+                            {/* USER TRANSACTIONS & INQUIRIES (Seekers & Owners) */}
+                            {!isAdmin && (
+                                <>
+                                    <Link
+                                        href={route('my-viewings.index')}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                                            route().current('my-viewings.*') || route().current('viewing.*')
+                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-white'
+                                        } ${collapsed ? 'justify-center px-2' : ''}`}
+                                        title={t('nav_my_viewings')}
+                                    >
+                                        <Calendar className="h-4 w-4 shrink-0 text-emerald-600" />
+                                        {!collapsed && <span>{t('nav_my_viewings')}</span>}
+                                    </Link>
+
+                                    <Link
+                                        href={route('my-legal-inquiries.index')}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                                            route().current('my-legal-inquiries.*')
+                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-white'
+                                        } ${collapsed ? 'justify-center px-2' : ''}`}
+                                        title={t('nav_my_legal')}
+                                    >
+                                        <Scale className="h-4 w-4 shrink-0 text-amber-500" />
+                                        {!collapsed && <span>{t('nav_my_legal')}</span>}
+                                    </Link>
+                                </>
+                            )}
+
+                            {/* LAWYER ROLE WORKSPACE */}
+                            {isLawyer && (
+                                <Link
+                                    href={route('lawyer.inquiries.index')}
+                                    className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                                        route().current('lawyer.inquiries.*')
+                                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                            : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-white'
+                                    } ${collapsed ? 'justify-center px-2' : ''}`}
+                                    title={t('nav_lawyer_workspace')}
+                                >
+                                    <Scale className="h-4 w-4 shrink-0 text-amber-600" />
+                                    {!collapsed && <span>{t('nav_lawyer_workspace')}</span>}
+                                </Link>
                             )}
 
                             {/* Public Marketplace Link */}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import LawyerBookingModal from '@/Components/LawyerBookingModal';
 import { useLanguage } from '@/Contexts/LanguageContext';
 import { YANGON_TOWNSHIPS, getTownshipName } from '@/utils/yangonTownships';
 import { normalizeToUnicode } from '@/utils/myanmarFontTools';
@@ -24,6 +25,13 @@ export default function LawyersIndex({ lawyers, filters }) {
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
     const [selectedTownship, setSelectedTownship] = useState(filters?.township || 'all');
     const [selectedType, setSelectedType] = useState(filters?.type || 'all');
+    const [bookingModalOpen, setBookingModalOpen] = useState(false);
+    const [selectedLawyer, setSelectedLawyer] = useState(null);
+
+    const handleOpenBooking = (lawyer) => {
+        setSelectedLawyer(lawyer);
+        setBookingModalOpen(true);
+    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -231,17 +239,23 @@ export default function LawyersIndex({ lawyers, filters }) {
                                     </div>
                                 </div>
 
-                                {/* Contact Button Footer */}
-                                <div className="border-t border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/40 px-6 py-3.5 flex items-center justify-between">
-                                    <span className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
-                                        📞 {item.user?.phone || 'Contact via Platform'}
-                                    </span>
+                                {/* Contact & Booking Footer */}
+                                <div className="border-t border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/40 px-6 py-3.5 flex items-center justify-between gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleOpenBooking(item)}
+                                        className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition"
+                                    >
+                                        <Scale className="h-3.5 w-3.5" />
+                                        <span>{lang === 'mm' ? 'ရှေ့နေငှားမည်' : 'Hire Lawyer'}</span>
+                                    </button>
+
                                     <a
                                         href={`tel:${item.user?.phone}`}
                                         className="inline-flex items-center gap-1 rounded-xl bg-slate-900 dark:bg-zinc-800 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800 dark:hover:bg-zinc-700 border border-transparent dark:border-zinc-700 transition"
                                     >
                                         <Phone className="h-3 w-3" />
-                                        <span>Call Lawyer</span>
+                                        <span>Call</span>
                                     </a>
                                 </div>
                             </div>
@@ -249,6 +263,13 @@ export default function LawyersIndex({ lawyers, filters }) {
                     )}
                 </div>
             </div>
+
+            {/* Reusable Lawyer Booking Modal */}
+            <LawyerBookingModal
+                show={bookingModalOpen}
+                onClose={() => setBookingModalOpen(false)}
+                lawyer={selectedLawyer}
+            />
         </PublicLayout>
     );
 }

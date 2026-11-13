@@ -3,11 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\AppNotification;
+use App\Models\LawyerInquiry;
 use App\Models\LawyerProfile;
 use App\Models\OwnerVerification;
 use App\Models\Property;
 use App\Models\SearchLog;
 use App\Models\User;
+use App\Models\ViewingMessage;
+use App\Models\ViewingRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -211,6 +214,24 @@ class DatabaseSeeder extends Seeder
                 'admin_remark' => null,
                 'reviewed_by' => null,
                 'reviewed_at' => null,
+            ]
+        );
+
+        // 3.2 Second Complete Seeker / Tenant
+        $tenant = User::firstOrCreate(
+            ['email' => 'tenant@propdirect.com'],
+            [
+                'name' => 'Ma Thinzar Nwe',
+                'phone' => '09333444555',
+                'password' => Hash::make('password'),
+                'role' => 'seeker',
+                'is_verified_owner' => false,
+                'avatar' => 'avatars/dummy_seeker.png',
+                'nrc_number' => '12/KAMAYU(N)123456',
+                'occupation' => 'Finance Manager',
+                'current_address' => 'No. 15, Hledan Road, Kamayut Township, Yangon',
+                'is_profile_complete' => true,
+                'email_verified_at' => now(),
             ]
         );
 
@@ -569,10 +590,136 @@ class DatabaseSeeder extends Seeder
             'created_at' => now()->subDays(2),
         ]);
 
-        $this->command->info('Phase 2.5 Seeding completed successfully!');
+        // 9. Seed Phase 3 Viewing Requests & P2P Messages
+        $sanchaungProp = Property::where('slug', 'modern-sanchaung-2-bedroom-apartment-lift-generator')->first();
+        $yankinProp = Property::where('slug', 'luxury-yankin-sedona-facing-condo-reserved-parking')->first();
+        $northDagonProp = Property::where('slug', 'prime-40x60-north-dagon-landed-property-60-year-grant-title')->first();
+
+        // 9.1 Accepted viewing request with unlocked contact & chat thread
+        if ($sanchaungProp) {
+            $acceptedViewing = ViewingRequest::updateOrCreate(
+                [
+                    'property_id' => $sanchaungProp->id,
+                    'seeker_id' => $tenant->id,
+                ],
+                [
+                    'owner_id' => $owner->id,
+                    'preferred_date' => Carbon::tomorrow()->toDateString(),
+                    'preferred_time' => 'Morning (9:00 AM - 12:00 PM)',
+                    'message' => 'Hello Daw Hlaing Moe, I work nearby at Kamayut and would like to inspect the unit and test the lift backup generator.',
+                    'status' => 'accepted',
+                    'contact_unlocked' => true,
+                ]
+            );
+
+            // Seed P2P Chat Messages
+            ViewingMessage::create([
+                'viewing_request_id' => $acceptedViewing->id,
+                'sender_id' => $tenant->id,
+                'message' => 'မင်္ဂလာပါ ဒေါ်လှိုင်မိုးရှင့်၊ မနက်ဖြန် မနက် ၁၀ နာရီလောက် လာကြည့်လို့ရမလားရှင်။',
+                'created_at' => Carbon::now()->subHours(5),
+            ]);
+
+            ViewingMessage::create([
+                'viewing_request_id' => $acceptedViewing->id,
+                'sender_id' => $owner->id,
+                'message' => 'ရပါတယ် မသဥ္ဇာနွယ်။ တိုက်ခန်းမှာ အဆင်သင့်ရှိနေပါမယ်။ ဖုန်းနံပါတ် တိုက်ရိုက်ခေါ်နိုင်ပါပြီနော်။',
+                'read_at' => Carbon::now()->subHours(3),
+                'created_at' => Carbon::now()->subHours(4),
+            ]);
+
+            ViewingMessage::create([
+                'viewing_request_id' => $acceptedViewing->id,
+                'sender_id' => $tenant->id,
+                'message' => 'ကျေးဇူးတင်ပါတယ်ရှင့်၊ မနက်ဖြန် အရောက်လာပါမယ်။',
+                'created_at' => Carbon::now()->subHours(2),
+            ]);
+        }
+
+        // 9.2 Pending viewing request (Seeker Ko Kyaw Swar)
+        if ($sanchaungProp) {
+            ViewingRequest::updateOrCreate(
+                [
+                    'property_id' => $sanchaungProp->id,
+                    'seeker_id' => $seeker->id,
+                ],
+                [
+                    'owner_id' => $owner->id,
+                    'preferred_date' => Carbon::now()->addDays(3)->toDateString(),
+                    'preferred_time' => 'Evening (5:00 PM - 7:00 PM)',
+                    'message' => 'Would like to visit this weekend after office hours.',
+                    'status' => 'pending',
+                    'contact_unlocked' => false,
+                ]
+            );
+        }
+
+        // 9.3 Rescheduled viewing request (Tenant Ma Thinzar Nwe for Yankin Condo)
+        if ($yankinProp) {
+            ViewingRequest::updateOrCreate(
+                [
+                    'property_id' => $yankinProp->id,
+                    'seeker_id' => $tenant->id,
+                ],
+                [
+                    'owner_id' => $owner->id,
+                    'preferred_date' => Carbon::now()->addDays(2)->toDateString(),
+                    'preferred_time' => 'Morning (9:00 AM - 12:00 PM)',
+                    'rescheduled_date' => Carbon::now()->addDays(3)->toDateString(),
+                    'rescheduled_time' => 'Afternoon (1:00 PM - 5:00 PM)',
+                    'owner_note' => 'I have a bank appointment in the morning. Please come in the afternoon instead.',
+                    'message' => 'Interested in the reserved car parking.',
+                    'status' => 'rescheduled',
+                    'contact_unlocked' => false,
+                ]
+            );
+        }
+
+        // 10. Seed Sample Lawyer Inquiries
+        $lawyerProfile1 = LawyerProfile::where('user_id', $lawyer1->id)->first();
+        if ($lawyerProfile1) {
+            // 10.1 Accepted Inquiry: Tenant hired Daw Mya Mya for Grant verification on North Dagon property
+            LawyerInquiry::updateOrCreate(
+                [
+                    'lawyer_profile_id' => $lawyerProfile1->id,
+                    'client_id' => $tenant->id,
+                    'service_type' => 'grant_verification',
+                ],
+                [
+                    'lawyer_user_id' => $lawyer1->id,
+                    'property_id' => $northDagonProp?->id,
+                    'preferred_date' => Carbon::now()->addDays(5)->toDateString(),
+                    'quoted_fee' => 70000.00,
+                    'notes' => 'Need official verification of the 60-year grant title deed and City Development Committee (YCDC) land records before placing earnest deposit.',
+                    'lawyer_response' => 'Consultation appointment confirmed. Please bring certified copies of the grant, cadastral map (မြေပုံ/မြေရာဇဝင်), and seller NRC.',
+                    'status' => 'accepted',
+                ]
+            );
+
+            // 10.2 Pending Inquiry: Owner Daw Hlaing Moe requested lease contract drafting
+            LawyerInquiry::updateOrCreate(
+                [
+                    'lawyer_profile_id' => $lawyerProfile1->id,
+                    'client_id' => $owner->id,
+                    'service_type' => 'lease_contract',
+                ],
+                [
+                    'lawyer_user_id' => $lawyer1->id,
+                    'property_id' => $sanchaungProp?->id,
+                    'preferred_date' => Carbon::now()->addDays(4)->toDateString(),
+                    'quoted_fee' => 100000.00,
+                    'notes' => 'Require standard residential lease agreement drafting with strict no-sublease and generator maintenance clauses.',
+                    'lawyer_response' => null,
+                    'status' => 'pending',
+                ]
+            );
+        }
+
+        $this->command->info('Phase 3 Seeding completed successfully!');
         $this->command->info('Admin: admin@propdirect.com / password (Secondary: admin1234)');
         $this->command->info('Owner: owner@propdirect.com / password (with 6 Yangon properties)');
-        $this->command->info('Seeker: seeker@propdirect.com / password (with pending KYC application)');
+        $this->command->info('Seeker 1: seeker@propdirect.com / password (with pending KYC application)');
+        $this->command->info('Seeker 2: tenant@propdirect.com / password (full profile, viewing requests & lawyer inquiry)');
         $this->command->info('Lawyer 1 (Advocate): lawyer1@propdirect.com / password');
         $this->command->info('Lawyer 2 (HGP): lawyer2@propdirect.com / password');
     }

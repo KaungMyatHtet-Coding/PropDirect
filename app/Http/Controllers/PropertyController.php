@@ -180,14 +180,20 @@ class PropertyController extends Controller
         // Contact unlock check: owner, admin, or seeker with unlocked viewing request
         $user = auth()->user();
         $isUnlocked = false;
+        $activeViewingRequest = null;
+
         if ($user) {
             if ($user->isAdmin() || $user->id === $property->owner_id) {
                 $isUnlocked = true;
             } else {
-                $isUnlocked = \App\Models\ViewingRequest::where('property_id', $property->id)
+                $activeViewingRequest = \App\Models\ViewingRequest::where('property_id', $property->id)
                     ->where('seeker_id', $user->id)
-                    ->where('contact_unlocked', true)
-                    ->exists();
+                    ->latest()
+                    ->first();
+
+                if ($activeViewingRequest && $activeViewingRequest->contact_unlocked) {
+                    $isUnlocked = true;
+                }
             }
         }
 
@@ -219,6 +225,8 @@ class PropertyController extends Controller
         return Inertia::render('Properties/Show', [
             'property' => $property,
             'nearbyLawyers' => $nearbyLawyers,
+            'isUnlocked' => $isUnlocked,
+            'activeViewingRequest' => $activeViewingRequest,
         ]);
     }
 }

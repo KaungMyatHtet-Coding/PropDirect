@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LawyerProfile extends Model
 {
@@ -38,6 +39,11 @@ class LawyerProfile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function inquiries(): HasMany
+    {
+        return $this->hasMany(LawyerInquiry::class);
     }
 
     public function isApproved(): bool

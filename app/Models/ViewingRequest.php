@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ViewingRequest extends Model
 {
@@ -16,6 +17,9 @@ class ViewingRequest extends Model
         'owner_id',
         'preferred_date',
         'preferred_time',
+        'rescheduled_date',
+        'rescheduled_time',
+        'owner_note',
         'message',
         'status',
         'contact_unlocked',
@@ -25,6 +29,7 @@ class ViewingRequest extends Model
     {
         return [
             'preferred_date' => 'date',
+            'rescheduled_date' => 'date',
             'contact_unlocked' => 'boolean',
         ];
     }
@@ -42,5 +47,10 @@ class ViewingRequest extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ViewingMessage::class);
     }
 }
