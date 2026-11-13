@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminSecondaryVerificationController;
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVerificationController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LawyerDirectoryController;
@@ -72,6 +73,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/lawyers/{lawyerProfile}/inquiries', [LawyerInquiryController::class, 'store'])->name('lawyer.inquiries.store');
     Route::get('/my-legal-inquiries', [LawyerInquiryController::class, 'clientIndex'])->name('my-legal-inquiries.index');
 
+    // Lease Contracts (Seeker / Common Operations)
+    Route::get('/my-contracts', [ContractController::class, 'tenantIndex'])->name('my-contracts.index');
+    Route::get('/contracts/{contract}', [ContractController::class, 'show'])->name('contracts.show');
+    Route::post('/contracts/{contract}/revise', [ContractController::class, 'revise'])->name('contracts.revise');
+    Route::post('/contracts/{contract}/sign', [ContractController::class, 'sign'])->name('contracts.sign');
+    Route::post('/contracts/{contract}/terminate', [ContractController::class, 'terminate'])->name('contracts.terminate');
+
     // Owner Property & Viewing Management (Guarded by verified owner)
     Route::prefix('owner')->name('owner.')->middleware('verified.owner')->group(function () {
         Route::get('/properties', [OwnerPropertyController::class, 'index'])->name('properties.index');
@@ -83,6 +91,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/viewings/{viewingRequest}/reschedule', [OwnerViewingController::class, 'reschedule'])->name('viewings.reschedule');
         Route::post('/viewings/{viewingRequest}/complete', [OwnerViewingController::class, 'complete'])->name('viewings.complete');
         Route::post('/viewings/{viewingRequest}/reject', [OwnerViewingController::class, 'reject'])->name('viewings.reject');
+
+        // Owner Lease Contracts
+        Route::get('/contracts', [ContractController::class, 'ownerIndex'])->name('contracts.index');
+        Route::get('/contracts/create', [ContractController::class, 'create'])->name('contracts.create');
+        Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
     });
 
     // Lawyer Inquiries Workspace (Guarded by lawyer role)

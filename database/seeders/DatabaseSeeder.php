@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\AppNotification;
+use App\Models\Contract;
+use App\Models\ContractVersion;
 use App\Models\LawyerInquiry;
 use App\Models\LawyerProfile;
 use App\Models\OwnerVerification;
@@ -715,7 +717,211 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->command->info('Phase 3 Seeding completed successfully!');
+        // 11. Seed Phase 4 Smart Lease Contracts with Multi-Version Negotiation
+        if ($sanchaungProp) {
+            // Contract 1: CNT-2026-001 (Active, 3 Versions Negotiation)
+            $contract1 = Contract::updateOrCreate(
+                ['contract_code' => 'CNT-2026-001'],
+                [
+                    'property_id' => $sanchaungProp->id,
+                    'owner_id' => $owner->id,
+                    'tenant_id' => $tenant->id,
+                    'viewing_request_id' => $acceptedViewing?->id,
+                    'start_date' => Carbon::now()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->startOfMonth()->addYear()->subDay()->toDateString(),
+                    'monthly_rent' => 450000.00,
+                    'deposit_amount' => 500000.00,
+                    'rent_due_day' => 5,
+                    'current_version' => 3,
+                    'owner_signed_at' => Carbon::now()->subDays(2),
+                    'tenant_signed_at' => Carbon::now()->subDays(1),
+                    'activated_at' => Carbon::now()->subDays(1),
+                    'status' => 'active',
+                ]
+            );
+
+            // Version 1 (Owner Draft)
+            ContractVersion::updateOrCreate(
+                ['contract_id' => $contract1->id, 'version_number' => 1],
+                [
+                    'monthly_rent' => 480000.00,
+                    'deposit_amount' => 960000.00, // 2 months
+                    'advance_payment_months' => 3,
+                    'rent_due_day' => 1,
+                    'start_date' => Carbon::now()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->startOfMonth()->addYear()->subDay()->toDateString(),
+                    'terms_and_conditions' => "Standard residential lease agreement prepared by Landlord Daw Hlaing Moe.",
+                    'house_rules_snapshot' => $sanchaungProp->house_rules,
+                    'revision_request_note' => 'Initial lease draft prepared by Landlord with 2-month deposit and 3-month advance.',
+                    'structured_clauses' => [
+                        [
+                            'clause_number' => 1,
+                            'title_en' => 'Premises & Permitted Residential Use',
+                            'title_mm' => 'ငှားရမ်းသည့်နေရာနှင့် လူနေထိုင်ခွင့်',
+                            'content_en' => "The Landlord leases the apartment unit in Sanchaung strictly for quiet residential use. Commercial operations and unauthorized subleasing are strictly prohibited.",
+                            'content_mm' => "အိမ်ရှင်သည် စမ်းချောင်းမြို့နယ်ရှိ တိုက်ခန်းအား လူနေထိုင်ရန် ရည်ရွယ်ချက်ဖြင့်သာ ငှားရမ်းပါသည်။ စီးပွားရေးလုပ်ငန်း လုပ်ကိုင်ခြင်းနှင့် တစ်ဆင့်ပြန်ငှားခြင်း လုံးဝ(လုံးဝ) မပြုလုပ်ရပါ။",
+                        ],
+                        [
+                            'clause_number' => 2,
+                            'title_en' => 'Rent Payment & Due Date',
+                            'title_mm' => 'ငှားရမ်းခ ပေးချေမှုနှင့် သတ်မှတ်ရက်',
+                            'content_en' => "Monthly rent of 480,000 MMK must be paid in advance on or before the 1st day of each calendar month.",
+                            'content_mm' => "လစဉ်ငှားရမ်းခ ၄၈၀,၀၀၀ ကျပ်အား လဆန်း ၁ ရက်နေ့မတိုင်မီ ကြိုတင်ပေးချေရပါမည်။",
+                        ],
+                        [
+                            'clause_number' => 3,
+                            'title_en' => 'Security Deposit',
+                            'title_mm' => 'အာမခံစပေါ်ငွေ',
+                            'content_en' => "A 2-month security deposit of 960,000 MMK shall be held by the Landlord for utility arrears and restorations.",
+                            'content_mm' => "အာမခံစပေါ်ငွေ ၂ လစာ ၉၆၀,၀၀၀ ကျပ်အား မီတာခကြွေးကျန်နှင့် ပြင်ဆင်စရိတ်များအတွက် အိမ်ရှင်က ထိန်းသိမ်းထားရှိပါမည်။",
+                        ],
+                    ],
+                    'change_summary' => 'Initial contract draft created and signed by Landlord.',
+                    'created_by' => $owner->id,
+                    'created_at' => Carbon::now()->subDays(5),
+                ]
+            );
+
+            // Version 2 (Tenant Revision Counter-Offer)
+            ContractVersion::updateOrCreate(
+                ['contract_id' => $contract1->id, 'version_number' => 2],
+                [
+                    'monthly_rent' => 450000.00,
+                    'deposit_amount' => 450000.00, // 1 month
+                    'advance_payment_months' => 1,
+                    'rent_due_day' => 5,
+                    'start_date' => Carbon::now()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->startOfMonth()->addYear()->subDay()->toDateString(),
+                    'terms_and_conditions' => "Tenant counter-offer: rent adjusted to 450,000 Ks, deposit 1 month, due day 5th.",
+                    'house_rules_snapshot' => $sanchaungProp->house_rules,
+                    'revision_request_note' => 'အိမ်လခကို ၄၅၀,၀၀၀ ကျပ်သို့ ညှိနှိုင်းပေးပါရန်နှင့် လစာထုတ်ရက်ဖြစ်သည့် လဆန်း ၅ ရက်နေ့တွင် ပေးချေလိုပါသည်ရှင့်။ စပေါ်ငွေကိုလည်း ၁ လစာသာ ထားရှိပေးစေလိုပါသည်ရှင်။',
+                    'structured_clauses' => [
+                        [
+                            'clause_number' => 1,
+                            'title_en' => 'Premises & Permitted Residential Use',
+                            'title_mm' => 'ငှားရမ်းသည့်နေရာနှင့် လူနေထိုင်ခွင့်',
+                            'content_en' => "The Landlord leases the apartment unit in Sanchaung strictly for quiet residential use. Commercial operations and unauthorized subleasing are strictly prohibited.",
+                            'content_mm' => "အိမ်ရှင်သည် စမ်းချောင်းမြို့နယ်ရှိ တိုက်ခန်းအား လူနေထိုင်ရန် ရည်ရွယ်ချက်ဖြင့်သာ ငှားရမ်းပါသည်။ စီးပွားရေးလုပ်ငန်း လုပ်ကိုင်ခြင်းနှင့် တစ်ဆင့်ပြန်ငှားခြင်း လုံးဝ(လုံးဝ) မပြုလုပ်ရပါ။",
+                        ],
+                        [
+                            'clause_number' => 2,
+                            'title_en' => 'Rent Payment & Due Date',
+                            'title_mm' => 'ငှားရမ်းခ ပေးချေမှုနှင့် သတ်မှတ်ရက်',
+                            'content_en' => "Monthly rent of 450,000 MMK must be paid in advance on or before the 5th day of each calendar month.",
+                            'content_mm' => "လစဉ်ငှားရမ်းခ ၄၅၀,၀၀၀ ကျပ်အား လဆန်း ၅ ရက်နေ့မတိုင်မီ ကြိုတင်ပေးချေရပါမည်။",
+                        ],
+                        [
+                            'clause_number' => 3,
+                            'title_en' => 'Security Deposit',
+                            'title_mm' => 'အာမခံစပေါ်ငွေ',
+                            'content_en' => "A 1-month security deposit of 450,000 MMK shall be held by the Landlord for utility arrears and restorations.",
+                            'content_mm' => "အာမခံစပေါ်ငွေ ၁ လစာ ၄၅၀,၀၀၀ ကျပ်အား မီတာခကြွေးကျန်နှင့် ပြင်ဆင်စရိတ်များအတွက် အိမ်ရှင်က ထိန်းသိမ်းထားရှိပါမည်။",
+                        ],
+                    ],
+                    'change_summary' => 'Rent decreased by 30,000 Ks (-6.3%). Deposit decreased by 510,000 Ks (-53.1%). Rent due day changed from 1st to 5th. Advance months reduced from 3 to 1 month.',
+                    'created_by' => $tenant->id,
+                    'created_at' => Carbon::now()->subDays(3),
+                ]
+            );
+
+            // Version 3 (Final Compromise & Dual Execution)
+            ContractVersion::updateOrCreate(
+                ['contract_id' => $contract1->id, 'version_number' => 3],
+                [
+                    'monthly_rent' => 450000.00,
+                    'deposit_amount' => 500000.00,
+                    'advance_payment_months' => 1,
+                    'rent_due_day' => 5,
+                    'start_date' => Carbon::now()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->startOfMonth()->addYear()->subDay()->toDateString(),
+                    'terms_and_conditions' => "Agreed compromise agreement: rent 450,000 Ks, deposit 500,000 Ks, rent due 5th.",
+                    'house_rules_snapshot' => $sanchaungProp->house_rules,
+                    'revision_request_note' => 'Compromise accepted: 450,000 Ks monthly rent, 500,000 Ks security deposit.',
+                    'structured_clauses' => [
+                        [
+                            'clause_number' => 1,
+                            'title_en' => 'Premises & Permitted Residential Use',
+                            'title_mm' => 'ငှားရမ်းသည့်နေရာနှင့် လူနေထိုင်ခွင့်',
+                            'content_en' => "The Landlord leases the apartment unit in Sanchaung strictly for quiet residential use. Commercial operations and unauthorized subleasing are strictly prohibited.",
+                            'content_mm' => "အိမ်ရှင်သည် စမ်းချောင်းမြို့နယ်ရှိ တိုက်ခန်းအား လူနေထိုင်ရန် ရည်ရွယ်ချက်ဖြင့်သာ ငှားရမ်းပါသည်။ စီးပွားရေးလုပ်ငန်း လုပ်ကိုင်ခြင်းနှင့် တစ်ဆင့်ပြန်ငှားခြင်း လုံးဝ(လုံးဝ) မပြုလုပ်ရပါ။",
+                        ],
+                        [
+                            'clause_number' => 2,
+                            'title_en' => 'Rent Payment & Due Date',
+                            'title_mm' => 'ငှားရမ်းခ ပေးချေမှုနှင့် သတ်မှတ်ရက်',
+                            'content_en' => "Monthly rent of 450,000 MMK must be paid in advance on or before the 5th day of each calendar month.",
+                            'content_mm' => "လစဉ်ငှားရမ်းခ ၄၅၀,၀၀၀ ကျပ်အား လဆန်း ၅ ရက်နေ့မတိုင်မီ ကြိုတင်ပေးချေရပါမည်။",
+                        ],
+                        [
+                            'clause_number' => 3,
+                            'title_en' => 'Security Deposit',
+                            'title_mm' => 'အာမခံစပေါ်ငွေ',
+                            'content_en' => "A security deposit of 500,000 MMK shall be held by the Landlord for utility arrears and restorations.",
+                            'content_mm' => "အာမခံစပေါ်ငွေ ၅၀၀,၀၀၀ ကျပ်အား မီတာခကြွေးကျန်နှင့် ပြင်ဆင်စရိတ်များအတွက် အိမ်ရှင်က ထိန်းသိမ်းထားရှိပါမည်။",
+                        ],
+                    ],
+                    'change_summary' => 'Deposit adjusted to 500,000 Ks (+11.1%). Rent confirmed at 450,000 Ks. Both parties executed.',
+                    'created_by' => $owner->id,
+                    'created_at' => Carbon::now()->subDays(2),
+                ]
+            );
+
+            // Mark property rented
+            $sanchaungProp->update(['status' => 'rented']);
+        }
+
+        // Contract 2: CNT-2026-002 (Pending Tenant Signature)
+        $hlaingProp = Property::where('slug', 'cozy-hlaing-mict-vicinity-apartment-own-meter')->first();
+        if ($hlaingProp) {
+            $contract2 = Contract::updateOrCreate(
+                ['contract_code' => 'CNT-2026-002'],
+                [
+                    'property_id' => $hlaingProp->id,
+                    'owner_id' => $owner->id,
+                    'tenant_id' => $seeker->id,
+                    'start_date' => Carbon::now()->addMonth()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->addMonth()->startOfMonth()->addMonths(6)->subDay()->toDateString(),
+                    'monthly_rent' => 350000.00,
+                    'deposit_amount' => 350000.00,
+                    'rent_due_day' => 5,
+                    'current_version' => 1,
+                    'owner_signed_at' => Carbon::now()->subHours(10),
+                    'tenant_signed_at' => null,
+                    'status' => 'pending_tenant',
+                ]
+            );
+
+            ContractVersion::updateOrCreate(
+                ['contract_id' => $contract2->id, 'version_number' => 1],
+                [
+                    'monthly_rent' => 350000.00,
+                    'deposit_amount' => 350000.00,
+                    'advance_payment_months' => 1,
+                    'rent_due_day' => 5,
+                    'start_date' => Carbon::now()->addMonth()->startOfMonth()->toDateString(),
+                    'end_date' => Carbon::now()->addMonth()->startOfMonth()->addMonths(6)->subDay()->toDateString(),
+                    'terms_and_conditions' => "Initial lease agreement for Cozy Hlaing MICT Apartment.",
+                    'house_rules_snapshot' => $hlaingProp->house_rules,
+                    'revision_request_note' => 'Initial draft signed by Landlord. Awaiting tenant review.',
+                    'structured_clauses' => [
+                        [
+                            'clause_number' => 1,
+                            'title_en' => 'Premises & Permitted Residential Use',
+                            'title_mm' => 'ငှားရမ်းသည့်နေရာနှင့် လူနေထိုင်ခွင့်',
+                            'content_en' => "Residential lease for Hlaing Township unit.",
+                            'content_mm' => "လှိုင်မြို့နယ် တိုက်ခန်းအား လူနေထိုင်ရန်သာ ငှားရမ်းခွင့်ပြုပါသည်။",
+                        ],
+                    ],
+                    'change_summary' => 'Initial contract draft created and signed by Landlord.',
+                    'created_by' => $owner->id,
+                    'created_at' => Carbon::now()->subHours(10),
+                ]
+            );
+        }
+
+        $this->command->info('Phase 4 Seeding completed successfully!');
+        $this->command->info('Contract 1: CNT-2026-001 (Active, 3 versions with visual diffs)');
+        $this->command->info('Contract 2: CNT-2026-002 (Pending tenant review)');
         $this->command->info('Admin: admin@propdirect.com / password (Secondary: admin1234)');
         $this->command->info('Owner: owner@propdirect.com / password (with 6 Yangon properties)');
         $this->command->info('Seeker 1: seeker@propdirect.com / password (with pending KYC application)');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contract;
 use App\Models\LawyerInquiry;
 use App\Models\ViewingRequest;
 use Illuminate\Http\Request;
@@ -33,6 +34,15 @@ class AdminTransactionController extends Controller
             ->latest()
             ->paginate(10, ['*'], 'inquiries_page');
 
+        $contracts = Contract::with([
+            'property:id,slug,title,price,township',
+            'owner:id,name,email',
+            'tenant:id,name,email',
+            'latestVersion',
+        ])
+            ->latest()
+            ->paginate(10, ['*'], 'contracts_page');
+
         $metrics = [
             'total_viewings' => ViewingRequest::count(),
             'accepted_viewings' => ViewingRequest::where('status', 'accepted')->count(),
@@ -41,11 +51,15 @@ class AdminTransactionController extends Controller
             'total_inquiries' => LawyerInquiry::count(),
             'accepted_inquiries' => LawyerInquiry::where('status', 'accepted')->count(),
             'completed_inquiries' => LawyerInquiry::where('status', 'completed')->count(),
+            'total_contracts' => Contract::count(),
+            'active_contracts' => Contract::where('status', 'active')->count(),
+            'pending_contracts' => Contract::whereIn('status', ['pending_tenant', 'revision_requested'])->count(),
         ];
 
         return Inertia::render('Admin/Transactions/Index', [
             'viewings' => $viewings,
             'inquiries' => $inquiries,
+            'contracts' => $contracts,
             'metrics' => $metrics,
         ]);
     }

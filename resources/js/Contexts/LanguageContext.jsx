@@ -163,6 +163,23 @@ const translations = {
         nav_my_legal: 'My Legal Inquiries',
         nav_lawyer_workspace: 'Lawyer Workspace',
         nav_transactions: 'Platform Transactions',
+        nav_contracts: 'Lease Contracts',
+        nav_my_contracts: 'My Contracts',
+
+        // Phase 4 Contracts & Diff-Tracker
+        contract_status_draft: 'Draft',
+        contract_status_pending_tenant: 'Pending Tenant Review',
+        contract_status_revision_requested: 'Revision Requested',
+        contract_status_active: 'Active & Binding',
+        contract_status_expired: 'Expired',
+        contract_status_terminated: 'Terminated',
+        contract_tab_document: 'Official Lease Document',
+        contract_tab_diff: 'Automated Diff-Tracker',
+        contract_tab_timeline: 'Version Timeline & Audit',
+        contract_sign_btn: 'Accept & Sign Contract',
+        contract_revise_btn: 'Propose Revision',
+        contract_print_btn: 'Print / Save PDF',
+        contract_new_version: 'Create New Version',
     },
 
     mm: {
@@ -325,6 +342,23 @@ const translations = {
         nav_my_legal: 'ကျွန်ုပ်၏ ဥပဒေဆွေးနွေးမှုများ',
         nav_lawyer_workspace: 'ရှေ့နေလုပ်ငန်းခွင်',
         nav_transactions: 'ပလက်ဖောင်း လွှဲပြောင်းမှုများ',
+        nav_contracts: 'အငှားစာချုပ်များ',
+        nav_my_contracts: 'ကျွန်ုပ်၏ စာချုပ်များ',
+
+        // Phase 4 Contracts & Diff-Tracker
+        contract_status_draft: 'မူကြမ်း',
+        contract_status_pending_tenant: 'အိမ်ငှားလက်မှတ်ရေးထိုးရန် စောင့်ဆိုင်းဆဲ',
+        contract_status_revision_requested: 'ပြင်ဆင်ချက် တောင်းဆိုထားသည်',
+        contract_status_active: 'အတည်ပြုပြီး အသက်ဝင်နေသည်',
+        contract_status_expired: 'သက်တမ်းကုန်ဆုံး',
+        contract_status_terminated: 'စာချုပ်ရပ်စဲပြီး',
+        contract_tab_document: 'တရားဝင် အငှားစာချုပ်',
+        contract_tab_diff: 'စာချုပ်ပြင်ဆင်ချက် နှိုင်းယှဉ်စစ်ဆေးချက်',
+        contract_tab_timeline: 'ဗားရှင်းမှတ်တမ်းနှင့် စစ်ဆေးမှု',
+        contract_sign_btn: 'သဘောတူ လက်မှတ်ရေးထိုးမည်',
+        contract_revise_btn: 'ပြင်ဆင်ချက် အဆိုပြုမည်',
+        contract_print_btn: 'စာချုပ် ပရင့်ထုတ်မည် / PDF သိမ်းမည်',
+        contract_new_version: 'ဗားရှင်းအသစ် ရေးဆွဲမည်',
     },
 };
 

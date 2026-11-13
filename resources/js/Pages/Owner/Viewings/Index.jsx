@@ -13,6 +13,7 @@ import {
     CheckCircle2,
     XCircle,
     Building2,
+    FileText,
     MapPin,
     AlertCircle,
     Check,
@@ -297,6 +298,20 @@ export default function OwnerViewingsIndex({ viewings }) {
                                             >
                                                 <CheckCircle2 className="h-3.5 w-3.5" />
                                                 <span>Mark Completed</span>
+                                            </Link>
+                                        )}
+
+                                        {(item.status === 'accepted' || item.status === 'completed') && (
+                                            <Link
+                                                href={route('owner.contracts.create', {
+                                                    property_id: item.property_id,
+                                                    seeker_id: item.seeker_id,
+                                                    viewing_request_id: item.id,
+                                                })}
+                                                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 px-3 py-2 text-xs font-bold text-white shadow-xs transition"
+                                            >
+                                                <FileText className="h-3.5 w-3.5" />
+                                                <span>{lang === 'mm' ? 'အငှားစာချုပ် မူကြမ်းဆွဲမည်' : 'Draft Lease Contract'}</span>
                                             </Link>
                                         )}
                                     </div>

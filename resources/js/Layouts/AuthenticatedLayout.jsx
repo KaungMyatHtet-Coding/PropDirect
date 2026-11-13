@@ -16,6 +16,7 @@ import {
     ChevronRight,
     Compass,
     FileCheck2,
+    FileText,
     FolderKanban,
     Globe,
     HelpCircle,
@@ -374,6 +375,16 @@ export default function AuthenticatedLayout({ header, breadcrumbs, children }) {
                                                     >
                                                         Viewing Requests
                                                     </Link>
+                                                    <Link
+                                                        href={route('owner.contracts.index')}
+                                                        className={`block px-2.5 py-1.5 rounded-lg text-xs font-medium transition ${
+                                                            route().current('owner.contracts.*')
+                                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+                                                        }`}
+                                                    >
+                                                        {t('nav_contracts') || 'Lease Contracts'}
+                                                    </Link>
                                                 </div>
                                             )}
                                         </div>
@@ -466,6 +477,19 @@ export default function AuthenticatedLayout({ header, breadcrumbs, children }) {
                                     >
                                         <Scale className="h-4 w-4 shrink-0 text-amber-500" />
                                         {!collapsed && <span>{t('nav_my_legal')}</span>}
+                                    </Link>
+
+                                    <Link
+                                        href={route('my-contracts.index')}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                                            route().current('my-contracts.*') || (route().current('contracts.show') && !isAdmin && !isOwner)
+                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold'
+                                                : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-white'
+                                        } ${collapsed ? 'justify-center px-2' : ''}`}
+                                        title={t('nav_my_contracts')}
+                                    >
+                                        <FileText className="h-4 w-4 shrink-0 text-emerald-600" />
+                                        {!collapsed && <span>{t('nav_my_contracts')}</span>}
                                     </Link>
                                 </>
                             )}
